@@ -1,0 +1,352 @@
+{
+  "elements": {
+    "nodes": [
+      {
+        "data": {
+          "type": "application",
+          "version": "",
+          "group": "",
+          "severity": "none",
+          "topParent": false,
+          "id": "root-component",
+          "label": "test-project",
+          "class": "component"
+        }
+      },
+      {
+        "data": {
+          "type": "library",
+          "version": "1.0.0",
+          "group": "org.example.commons",
+          "severity": "critical",
+          "topParent": true,
+          "id": "component-A",
+          "label": "org.example.commons/component-A/1.0.0",
+          "class": "component"
+        }
+      },
+      {
+        "data": {
+          "type": "library",
+          "version": "1.0.0",
+          "group": "org.example.web",
+          "severity": "critical",
+          "topParent": false,
+          "id": "component-B",
+          "label": "org.example.web/component-B/1.0.0",
+          "class": "component"
+        }
+      },
+      {
+        "data": {
+          "type": "library",
+          "version": "1.0.0",
+          "group": "org.example.web",
+          "severity": "critical",
+          "topParent": false,
+          "id": "component-C",
+          "label": "org.example.web/component-C/1.0.0",
+          "class": "component"
+        }
+      },
+      {
+        "data": {
+          "type": "library",
+          "version": "1.0.0",
+          "group": "org.example.web",
+          "severity": "none",
+          "topParent": false,
+          "id": "component-D",
+          "label": "org.example.web/component-D/1.0.0",
+          "class": "component"
+        }
+      },
+      {
+        "data": {
+          "type": "library",
+          "version": "1.0.0",
+          "group": "org.example.commons",
+          "severity": "critical",
+          "topParent": true,
+          "id": "component-E",
+          "label": "org.example.commons/component-E/1.0.0",
+          "class": "component"
+        }
+      },
+      {
+        "data": {
+          "type": "library",
+          "version": "1.0.0",
+          "group": "org.example.database",
+          "severity": "critical",
+          "topParent": false,
+          "id": "component-F",
+          "label": "org.example.database/component-F/1.0.0",
+          "class": "component"
+        }
+      },
+      {
+        "data": {
+          "type": "library",
+          "version": "1.0.0",
+          "group": "org.example.database",
+          "severity": "none",
+          "topParent": false,
+          "id": "component-G",
+          "label": "org.example.database/component-G/1.0.0",
+          "class": "component"
+        }
+      },
+      {
+        "data": {
+          "type": "library",
+          "version": "1.0.0",
+          "group": "org.example.commons",
+          "severity": "none",
+          "topParent": false,
+          "id": "component-H",
+          "label": "org.example.commons/component-H/1.0.0",
+          "class": "component"
+        }
+      },
+      {
+        "data": {
+          "url": "",
+          "id": "license-MIT",
+          "label": "MIT",
+          "class": "license"
+        }
+      },
+      {
+        "data": {
+          "url": "",
+          "id": "license-Apache-2.0",
+          "label": "Apache-2.0",
+          "class": "license"
+        }
+      },
+      {
+        "data": {
+          "url": "",
+          "id": "license-GPL-3.0",
+          "label": "GPL-3.0",
+          "class": "license"
+        }
+      },
+      {
+        "data": {
+          "url": "",
+          "id": "license-BSD-3-Clause",
+          "label": "BSD-3-Clause",
+          "class": "license"
+        }
+      },
+      {
+        "data": {
+          "url": "",
+          "id": "license-LGPL-2.1",
+          "label": "LGPL-2.1",
+          "class": "license"
+        }
+      },
+      {
+        "data": {
+          "url": "",
+          "id": "license-MPL-2.0",
+          "label": "MPL-2.0",
+          "class": "license"
+        }
+      },
+      {
+        "data": {
+          "score": 8.5,
+          "severity": "high",
+          "url": "https://example.com/advisories/TEST-VULN-001",
+          "id": "TEST-VULN-001",
+          "label": "TEST-VULN-001",
+          "class": "vulnerability"
+        }
+      },
+      {
+        "data": {
+          "score": 9.8,
+          "severity": "critical",
+          "url": "https://example.com/advisories/TEST-VULN-002",
+          "id": "TEST-VULN-002",
+          "label": "TEST-VULN-002",
+          "class": "vulnerability"
+        }
+      }
+    ],
+    "edges": [
+      {
+        "data": {
+          "id": "license-MIT-applies-to-component-A",
+          "source": "license-MIT",
+          "target": "component-A",
+          "class": "license"
+        }
+      },
+      {
+        "data": {
+          "id": "license-Apache-2.0-applies-to-component-A",
+          "source": "license-Apache-2.0",
+          "target": "component-A",
+          "class": "license"
+        }
+      },
+      {
+        "data": {
+          "id": "license-MIT-applies-to-component-B",
+          "source": "license-MIT",
+          "target": "component-B",
+          "class": "license"
+        }
+      },
+      {
+        "data": {
+          "id": "license-GPL-3.0-applies-to-component-C",
+          "source": "license-GPL-3.0",
+          "target": "component-C",
+          "class": "license"
+        }
+      },
+      {
+        "data": {
+          "id": "license-BSD-3-Clause-applies-to-component-C",
+          "source": "license-BSD-3-Clause",
+          "target": "component-C",
+          "class": "license"
+        }
+      },
+      {
+        "data": {
+          "id": "license-LGPL-2.1-applies-to-component-D",
+          "source": "license-LGPL-2.1",
+          "target": "component-D",
+          "class": "license"
+        }
+      },
+      {
+        "data": {
+          "id": "license-MIT-applies-to-component-D",
+          "source": "license-MIT",
+          "target": "component-D",
+          "class": "license"
+        }
+      },
+      {
+        "data": {
+          "id": "license-MPL-2.0-applies-to-component-E",
+          "source": "license-MPL-2.0",
+          "target": "component-E",
+          "class": "license"
+        }
+      },
+      {
+        "data": {
+          "id": "license-MIT-applies-to-component-F",
+          "source": "license-MIT",
+          "target": "component-F",
+          "class": "license"
+        }
+      },
+      {
+        "data": {
+          "id": "license-Apache-2.0-applies-to-component-F",
+          "source": "license-Apache-2.0",
+          "target": "component-F",
+          "class": "license"
+        }
+      },
+      {
+        "data": {
+          "id": "license-BSD-3-Clause-applies-to-component-G",
+          "source": "license-BSD-3-Clause",
+          "target": "component-G",
+          "class": "license"
+        }
+      },
+      {
+        "data": {
+          "id": "license-MIT-applies-to-component-H",
+          "source": "license-MIT",
+          "target": "component-H",
+          "class": "license"
+        }
+      },
+      {
+        "data": {
+          "id": "TEST-VULN-001-affects-component-C",
+          "source": "TEST-VULN-001",
+          "target": "component-C",
+          "class": "vulnerability"
+        }
+      },
+      {
+        "data": {
+          "id": "TEST-VULN-002-affects-component-C",
+          "source": "TEST-VULN-002",
+          "target": "component-C",
+          "class": "vulnerability"
+        }
+      },
+      {
+        "data": {
+          "id": "component-A->component-B",
+          "source": "component-A",
+          "target": "component-B",
+          "class": "component"
+        }
+      },
+      {
+        "data": {
+          "id": "component-B->component-C",
+          "source": "component-B",
+          "target": "component-C",
+          "class": "component"
+        }
+      },
+      {
+        "data": {
+          "id": "component-C->component-D",
+          "source": "component-C",
+          "target": "component-D",
+          "class": "component"
+        }
+      },
+      {
+        "data": {
+          "id": "component-E->component-F",
+          "source": "component-E",
+          "target": "component-F",
+          "class": "component"
+        }
+      },
+      {
+        "data": {
+          "id": "component-F->component-G",
+          "source": "component-F",
+          "target": "component-G",
+          "class": "component"
+        }
+      },
+      {
+        "data": {
+          "id": "component-F->component-B",
+          "source": "component-F",
+          "target": "component-B",
+          "class": "component"
+        }
+      },
+      {
+        "data": {
+          "id": "component-G->component-H",
+          "source": "component-G",
+          "target": "component-H",
+          "class": "component"
+        }
+      }
+    ]
+  }
+}

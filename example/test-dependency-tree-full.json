@@ -1,0 +1,278 @@
+{
+  "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "serialNumber": "urn:uuid:1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2025-07-15T14:30:00+02:00",
+    "tools": {
+      "components": [
+        {
+          "type": "application",
+          "name": "sbom-generator",
+          "version": "1.0.0"
+        }
+      ]
+    },
+    "component": {
+      "bom-ref": "root-component",
+      "type": "application",
+      "name": "test-project"
+    }
+  },
+  "components": [
+    {
+      "bom-ref": "component-A",
+      "type": "library",
+      "name": "component-A",
+      "group": "org.example.commons",
+      "version": "1.0.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        },
+        {
+          "license": {
+            "id": "Apache-2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0"
+          }
+        }
+      ],
+      "purl": "pkg:npm/component-A@1.0.0"
+    },
+    {
+      "bom-ref": "component-B",
+      "type": "library",
+      "name": "component-B",
+      "group": "org.example.web",
+      "version": "1.0.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "purl": "pkg:npm/component-B@1.0.0"
+    },
+    {
+      "bom-ref": "component-C",
+      "type": "library",
+      "name": "component-C",
+      "group": "org.example.web",
+      "version": "1.0.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "GPL-3.0"
+          }
+        },
+        {
+          "license": {
+            "id": "BSD-3-Clause"
+          }
+        }
+      ],
+      "purl": "pkg:npm/component-C@1.0.0"
+    },
+    {
+      "bom-ref": "component-D",
+      "type": "library",
+      "name": "component-D",
+      "group": "org.example.web",
+      "version": "1.0.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "LGPL-2.1"
+          }
+        },
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "purl": "pkg:npm/component-D@1.0.0"
+    },
+    {
+      "bom-ref": "component-E",
+      "type": "library",
+      "name": "component-E",
+      "group": "org.example.commons",
+      "version": "1.0.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "MPL-2.0"
+          }
+        }
+      ],
+      "purl": "pkg:npm/component-E@1.0.0"
+    },
+    {
+      "bom-ref": "component-F",
+      "type": "library",
+      "name": "component-F",
+      "group": "org.example.database",
+      "version": "1.0.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        },
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "purl": "pkg:npm/component-F@1.0.0"
+    },
+    {
+      "bom-ref": "component-G",
+      "type": "library",
+      "name": "component-G",
+      "group": "org.example.database",
+      "version": "1.0.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "BSD-3-Clause"
+          }
+        }
+      ],
+      "purl": "pkg:npm/component-G@1.0.0"
+    },
+    {
+      "bom-ref": "component-H",
+      "type": "library",
+      "name": "component-H",
+      "group": "org.example.commons",
+      "version": "1.0.0",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "purl": "pkg:npm/component-H@1.0.0"
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "component-A",
+      "dependsOn": [
+        "component-B"
+      ]
+    },
+    {
+      "ref": "component-B",
+      "dependsOn": [
+        "component-C"
+      ]
+    },
+    {
+      "ref": "component-C",
+      "dependsOn": [
+        "component-D"
+      ]
+    },
+    {
+      "ref": "component-D",
+      "dependsOn": []
+    },
+    {
+      "ref": "component-E",
+      "dependsOn": [
+        "component-F"
+      ]
+    },
+    {
+      "ref": "component-F",
+      "dependsOn": [
+        "component-G",
+        "component-B"
+      ]
+    },
+    {
+      "ref": "component-G",
+      "dependsOn": [
+        "component-H"
+      ]
+    },
+    {
+      "ref": "component-H",
+      "dependsOn": []
+    }
+  ],
+  "vulnerabilities": [
+    {
+      "bom-ref": "urn:uuid:9a8b7c6d-5e4f-3a2b-1c0d-1e2f3a4b5c6d",
+      "id": "TEST-VULN-001",
+      "source": {
+        "name": "test-source",
+        "url": "https://example.com/advisories/TEST-VULN-001"
+      },
+      "references": [
+        {
+          "id": "TEST-VULN-001",
+          "source": {
+            "name": "test-source",
+            "url": "https://example.com/advisories/TEST-VULN-001"
+          }
+        }
+      ],
+      "ratings": [
+        {
+          "score": 8.5,
+          "severity": "high",
+          "method": "CVSSv31",
+          "vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:C/C:H/I:H/A:N"
+        }
+      ],
+      "description": "Test vulnerability affecting component C",
+      "affects": [
+        {
+          "ref": "component-C"
+        }
+      ]
+    },
+    {
+      "bom-ref": "urn:uuid:8b7c6d5e-4f3a-2b1c-0d1e-2f3a4b5c6d7e",
+      "id": "TEST-VULN-002",
+      "source": {
+        "name": "test-source",
+        "url": "https://example.com/advisories/TEST-VULN-002"
+      },
+      "references": [
+        {
+          "id": "TEST-VULN-002",
+          "source": {
+            "name": "test-source",
+            "url": "https://example.com/advisories/TEST-VULN-002"
+          }
+        }
+      ],
+      "ratings": [
+        {
+          "score": 9.8,
+          "severity": "critical",
+          "method": "CVSSv31",
+          "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H"
+        }
+      ],
+      "description": "Critical vulnerability affecting component C",
+      "affects": [
+        {
+          "ref": "component-C"
+        }
+      ]
+    }
+  ]
+}
