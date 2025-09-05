@@ -2,10 +2,13 @@
 
 A tool for converting CycloneDX Software Bill of Materials (SBOM) files into Cytoscape.js compatible graph format for visualization and analysis.
 
+![Example SBOM Visualization](example/cdx2cyto.gif)
+
+
 Generic view:
 ![Example SBOM Visualization](example/example.png)
 
-Azure API example:
+view with licenses:
 ![Example SBOM Visualization](example/example-irl-license-focus.png)
 
 ## Introduction
@@ -497,5 +500,6 @@ For more information on using Cytoscape effectively, refer to these resources:
 - [CycloneDX Specification](https://cyclonedx.org/specification/overview/) - for understanding SBOM structure
 - [OWASP Dependency-Track](https://dependencytrack.org/) - companion tool for SBOM management
 - [NIST Software Supply Chain Security Guidance](https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity/software-security-supply-chains) - best practices
+
 
 With these techniques, you can effectively analyze and visualize your software dependencies, vulnerabilities, and licenses to improve your software supply chain security posture.
