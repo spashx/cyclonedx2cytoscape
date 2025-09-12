@@ -1,0 +1,141 @@
+## Build outputs
+bin/
+obj/
+[Bb]uild/
+[Ll]og/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+[Ww][Ii][Nn]32/
+
+## VS / Rider / general IDE
+.vs/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+## VS Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+## Generated
+Generated/*
+*.g.cs
+*.g.i.cs
+
+## Publish output
+publish/
+[Pp]ublished/
+artifacts/
+
+## NuGet
+*.nupkg
+*.snupkg
+*.nuspec
+packages/
+.nuget/
+
+## Package restore cache
+**/project.lock.json
+project.fragment.lock.json
+
+## Logs & diagnostics
+*.log
+logs/
+TestResult*/
+TestResults/
+*.coverage
+*.coveragexml
+coverage/
+coverage-report/
+
+## BenchmarkDotNet
+BenchmarkDotNet.Artifacts/
+
+## Test related
+*.trx
+*.xml~ 
+*.test.json
+
+## Temporary files
+*.tmp
+*.temp
+*.bak
+*.old
+~$*
+*.swp
+
+## OS
+.DS_Store
+Thumbs.db
+
+## Tooling
+.rider/
+.jetbrains/
+ReSharper*/
+_UpgradeReport_Files/
+UpgradeLog*.XML
+*.psess
+*.vsp
+*.vspx
+
+## Security / secrets (adjust if needed)
+secrets.json
+appsettings.*.local.json
+*.pfx
+
+## Local caches
+.cache/
+.nuget/packages/
+
+## Symbol caches
+*.pdb
+
+## Key / signing
+*.snk
+
+## JSON lock (if using npm/yarn for frontend parts later)
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+
+## Cytoscape exported sessions / styles (optional)
+*.cyjs
+*.cys
+*.cytoscape.backup
+
+## Archive dumps
+*.zip
+*.7z
+*.tar
+*.tar.gz
+*.tgz
+
+## JetBrains dotCover
+.idea/.dotCover
+
+## Visual Studio profiler
+*.psess
+*.vsp
+*.vspx
+
+## Global.json override (keep if intentional)
+# global.json
+
+## Local scripts / scratch
+scratch/
+local/
+tmp/
+temp/
+
+## Rider / solution metadata
+*.sln.iml

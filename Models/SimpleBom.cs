@@ -102,6 +102,8 @@ public class VulnerabilitySource
 {
     [JsonProperty("url")]
     public string? Url { get; set; }
+    [JsonProperty("name")]
+    public string? Name { get; set; }
 }
 
 public class VulnerabilityRating
@@ -111,6 +113,11 @@ public class VulnerabilityRating
 
     [JsonProperty("severity")]
     public string? Severity { get; set; }
+    [JsonProperty("method")]
+    public string? Method { get; set; }
+    [JsonProperty("vector")]
+    public string? Vector { get; set; }
+
 }
 
 public class VulnerabilityAffects

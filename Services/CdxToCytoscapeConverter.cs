@@ -222,10 +222,14 @@ public class CdxToCytoscapeConverter
         var nodeData = new VulnerabilityNodeData
         {
             Id = vulnerability.Id,
-            Label = vulnerability.Id,
+            Label = vulnerability.Id,          
+            SourceUrl = vulnerability.Source?.Url ?? "",      // URL to vulnerability details
+            SourceName = vulnerability.Source?.Name ?? "", // Name of the rating source (e.g., NVD)
+
             Score = rating?.Score,                     // CVSS score (numerical value)
             Severity = rating?.Severity ?? "unknown",  // Severity level (text)
-            Url = vulnerability.Source?.Url ?? ""      // URL to vulnerability details
+            Method = rating?.Method ?? "",              // Scoring method (e.g., CVSSv3)
+            Vector = rating?.Vector ?? "",              // Scoring vector string
         };
 
         elements.AddNode(new CytoscapeNode(nodeData));
