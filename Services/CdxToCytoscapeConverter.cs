@@ -32,6 +32,18 @@ public class CdxToCytoscapeConverter
     {
         _options = options;
         var graph = new CytoscapeGraph();
+        
+        // If OnlyVex mode is enabled, only process vulnerabilities
+        if (options.OnlyVex)
+        {
+            return ConvertOnlyVex(bom);
+        }
+        
+        // If OnlyVdr mode is enabled, only process vulnerabilities and impacted components
+        if (options.OnlyVdr)
+        {
+            return ConvertOnlyVdr(bom);
+        }
       
         // Add root component if it exists
         // The root component represents the main application or project
@@ -589,5 +601,90 @@ public class CdxToCytoscapeConverter
                 edge.Data.Class = "vulnerability";
             }
         }
+    }
+    
+    /// <summary>
+    /// Converts a CycloneDX SBOM to contain only vulnerability nodes (VEX mode)
+    /// </summary>
+    /// <param name="bom">The SBOM to convert</param>
+    /// <returns>A graph containing only vulnerability nodes</returns>
+    private CytoscapeGraph ConvertOnlyVex(SimpleBom bom)
+    {
+        var graph = new CytoscapeGraph();
+        
+        // Add vulnerabilities as nodes only
+        if (bom.Vulnerabilities != null)
+        {
+            foreach (var vulnerability in bom.Vulnerabilities)
+            {
+                AddVulnerabilityNode(graph.Elements, vulnerability);
+            }
+        }
+        
+        return graph;
+    }
+    
+    /// <summary>
+    /// Converts a CycloneDX SBOM to contain only vulnerabilities and their affected components (VDR mode)
+    /// </summary>
+    /// <param name="bom">The SBOM to convert</param>
+    /// <returns>A graph containing only vulnerability nodes and affected component nodes with their relationships</returns>
+    private CytoscapeGraph ConvertOnlyVdr(SimpleBom bom)
+    {
+        var graph = new CytoscapeGraph();
+        
+        if (bom.Vulnerabilities == null || !bom.Vulnerabilities.Any())
+        {
+            return graph;
+        }
+        
+        // Get all components referenced by vulnerabilities
+        var impactedComponentRefs = new HashSet<string>();
+        
+        foreach (var vulnerability in bom.Vulnerabilities)
+        {
+            // Add vulnerability node
+            AddVulnerabilityNode(graph.Elements, vulnerability);
+            
+            // Collect impacted component references
+            if (vulnerability.Affects != null)
+            {
+                foreach (var affect in vulnerability.Affects)
+                {
+                    if (!string.IsNullOrEmpty(affect.Ref))
+                    {
+                        impactedComponentRefs.Add(affect.Ref);
+                    }
+                }
+            }
+        }
+        
+        // Add root component if it's impacted
+        if (bom.Metadata?.Component != null && 
+            !string.IsNullOrEmpty(bom.Metadata.Component.BomRef) &&
+            impactedComponentRefs.Contains(bom.Metadata.Component.BomRef))
+        {
+            AddComponentNode(graph.Elements, bom.Metadata.Component);
+        }
+        
+        // Add only impacted components
+        if (bom.Components != null)
+        {
+            foreach (var component in bom.Components)
+            {
+                if (component.BomRef != null && impactedComponentRefs.Contains(component.BomRef))
+                {
+                    AddComponentNode(graph.Elements, component);
+                }
+            }
+        }
+        
+        // Add edges between vulnerabilities and impacted components
+        foreach (var vulnerability in bom.Vulnerabilities)
+        {
+            AddVulnerabilityEdges(graph.Elements, vulnerability);
+        }
+        
+        return graph;
     }
 }

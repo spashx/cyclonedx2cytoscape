@@ -59,6 +59,12 @@ cdx2cyto [options] <input-file> <output-file>
 - `--vulns`: Include vulnerability nodes and edges
 - `--lic`: Include license nodes and edges
 - `--showGroupsInNodeLabels`: Include group names in node labels (default: off for better readability)
+- `--only-vex`: Output only vulnerability information in VEX (Vulnerability Exploitability eXchange) mode with console table display and Cytoscape.js file generation
+- `--only-vdr`: Output vulnerabilities and affected components in VDR (Vulnerability Disclosure Report) mode with console table display and Cytoscape.js file generation
+
+**Note**: `--only-vex` and `--only-vdr` options are mutually exclusive and provide specialized SBOM analysis modes with vulnerability-focused console output plus standard Cytoscape.js file generation.
+
+**Important**: For vulnerability-related options (`--vulns`, `--only-vex`, `--only-vdr`), the tool only processes vulnerability information that is already present in the input SBOM file. The tool does not perform online vulnerability lookups against databases like NVD (National Vulnerability Database) or GitHub Security Advisories (GHAS). To include vulnerability data, the SBOM must be pre-enriched with vulnerability information using tools like OWASP Dependency-Track, Syft/Grype, or similar SBOM generators.
 
 If no options are specified, only components and their dependencies will be included in the output.
 
@@ -93,6 +99,87 @@ Combine multiple options:
 ```bash
 cdx2cyto --vulns --lic --showGroupsInNodeLabels path/to/sbom.json output.json
 ```
+
+Generate VEX (Vulnerability Exploitability eXchange) report:
+```bash
+cdx2cyto --only-vex path/to/sbom.json output.json
+```
+
+Generate VDR (Vulnerability Disclosure Report) with affected components:
+```bash
+cdx2cyto --only-vdr path/to/sbom.json output.json
+```
+
+## VEX and VDR Modes
+
+The tool supports specialized vulnerability reporting modes that provide console-based vulnerability analysis:
+
+**Important**: These modes only process vulnerabilities that are already included in the input CycloneDX SBOM file. The tool does not perform online vulnerability scanning or database lookups. For vulnerability-enriched SBOMs, use tools like OWASP Dependency-Track, Syft with vulnerability scanning, or other SBOM generators that include vulnerability data.
+
+### VEX Mode (--only-vex)
+VEX (Vulnerability Exploitability eXchange) mode focuses exclusively on vulnerability information. It provides:
+- Deduplicated vulnerability list (removes duplicate CVE entries)
+- Color-coded severity display in console table
+- Vulnerability summary by severity level
+- Clean tabular output with CVE ID, severity, CVSS score, and scoring method
+- Standard Cytoscape.js JSON file generation for visualization
+
+Example VEX output:
+```
+SBOM Component: MyApplication
+
+Found 437 vulnerabilities:
+  54 CRITICAL, 194 HIGH, 170 MEDIUM, 18 LOW, 1 UNKNOWN
+
+--------------------------------------------------------
+| CVE ID              | Severity | CVSS Score | Method  |
+--------------------------------------------------------
+| CVE-2024-38999      | CRITICAL | 10.0       | CVSSv3  |
+| CVE-2016-1000031    | CRITICAL | 9.8        | CVSSv3  |
+| CVE-2019-17571      | CRITICAL | 9.8        | CVSSv3  |
+| CVE-2022-23307      | HIGH     | 9.0        | CVSSv2  |
+| CVE-2017-9096       | HIGH     | 8.8        | CVSSv3  |
+| CVE-2023-1370       | MEDIUM   | 7.5        | CVSSv3  |
+| CVE-2021-23337      | MEDIUM   | 7.2        | CVSSv3  |
+| CVE-2025-7339       | LOW      | 3.4        | CVSSv3  |
+| CVE-2025-32395      | UNKNOWN  | N/A        | other   |
+--------------------------------------------------------
+```
+
+### VDR Mode (--only-vdr)
+VDR (Vulnerability Disclosure Report) mode includes both vulnerabilities and their affected components. It provides:
+- All VEX mode features plus affected component information
+- Component names and versions in the console table
+- Clear mapping between vulnerabilities and components they affect
+- Standard Cytoscape.js JSON file generation for visualization
+
+Example VDR output:
+```
+SBOM Component: MyApplication
+
+Found 437 vulnerabilities affecting 156 components:
+  54 CRITICAL, 194 HIGH, 170 MEDIUM, 18 LOW, 1 UNKNOWN
+
+---------------------------------------------------------------------------------------------
+| CVE ID              | Severity | CVSS Score | Method  | Components                      |
+---------------------------------------------------------------------------------------------
+| CVE-2024-38999      | CRITICAL | 10.0       | CVSSv3  | spring-core@5.3.21              |
+| CVE-2016-1000031    | CRITICAL | 9.8        | CVSSv3  | commons-fileupload@1.3.3        |
+| CVE-2019-17571      | CRITICAL | 9.8        | CVSSv3  | log4j-core@2.17.1               |
+| CVE-2022-23307      | HIGH     | 9.0        | CVSSv2  | log4j-core@2.17.1               |
+| CVE-2017-9096       | HIGH     | 8.8        | CVSSv3  | jackson-databind@2.13.2.2       |
+---------------------------------------------------------------------------------------------
+```
+
+### Color Coding
+Both modes use color-coded severity levels in the console output:
+- **🔴 CRITICAL**: Red highlighting for maximum security impact
+- **🟠 HIGH**: Orange highlighting for high security impact  
+- **🟡 MEDIUM**: Yellow highlighting for medium security impact
+- **🟢 LOW**: Green highlighting for low security impact
+- **⚪ UNKNOWN**: No color for unknown or unscored vulnerabilities
+
+The vulnerability counts in the summary are also color-coded to provide immediate visual feedback on the security posture of your SBOM.
 
 ## Output Format
 
