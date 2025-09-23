@@ -21,7 +21,7 @@
           "severity": "critical",
           "topParent": true,
           "id": "component-A",
-          "label": "org.example.commons/component-A/1.0.0",
+          "label": "component-A/1.0.0",
           "class": "component"
         }
       },
@@ -33,7 +33,7 @@
           "severity": "critical",
           "topParent": false,
           "id": "component-B",
-          "label": "org.example.web/component-B/1.0.0",
+          "label": "component-B/1.0.0",
           "class": "component"
         }
       },
@@ -45,7 +45,7 @@
           "severity": "critical",
           "topParent": false,
           "id": "component-C",
-          "label": "org.example.web/component-C/1.0.0",
+          "label": "component-C/1.0.0",
           "class": "component"
         }
       },
@@ -57,7 +57,7 @@
           "severity": "none",
           "topParent": false,
           "id": "component-D",
-          "label": "org.example.web/component-D/1.0.0",
+          "label": "component-D/1.0.0",
           "class": "component"
         }
       },
@@ -69,7 +69,7 @@
           "severity": "critical",
           "topParent": true,
           "id": "component-E",
-          "label": "org.example.commons/component-E/1.0.0",
+          "label": "component-E/1.0.0",
           "class": "component"
         }
       },
@@ -81,7 +81,7 @@
           "severity": "critical",
           "topParent": false,
           "id": "component-F",
-          "label": "org.example.database/component-F/1.0.0",
+          "label": "component-F/1.0.0",
           "class": "component"
         }
       },
@@ -90,10 +90,10 @@
           "type": "library",
           "version": "1.0.0",
           "group": "org.example.database",
-          "severity": "none",
+          "severity": "low",
           "topParent": false,
           "id": "component-G",
-          "label": "org.example.database/component-G/1.0.0",
+          "label": "component-G/1.0.0",
           "class": "component"
         }
       },
@@ -102,10 +102,10 @@
           "type": "library",
           "version": "1.0.0",
           "group": "org.example.commons",
-          "severity": "none",
+          "severity": "low",
           "topParent": false,
           "id": "component-H",
-          "label": "org.example.commons/component-H/1.0.0",
+          "label": "component-H/1.0.0",
           "class": "component"
         }
       },
@@ -161,7 +161,10 @@
         "data": {
           "score": 8.5,
           "severity": "high",
-          "url": "https://example.com/advisories/TEST-VULN-001",
+          "source_url": "https://example.com/advisories/TEST-VULN-001",
+          "method": "CVSSv31",
+          "vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:C/C:H/I:H/A:N",
+          "source_name": "test-source",
           "id": "TEST-VULN-001",
           "label": "TEST-VULN-001",
           "class": "vulnerability"
@@ -171,9 +174,38 @@
         "data": {
           "score": 9.8,
           "severity": "critical",
-          "url": "https://example.com/advisories/TEST-VULN-002",
+          "source_url": "https://example.com/advisories/TEST-VULN-002",
+          "method": "CVSSv31",
+          "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+          "source_name": "test-source",
           "id": "TEST-VULN-002",
           "label": "TEST-VULN-002",
+          "class": "vulnerability"
+        }
+      },
+      {
+        "data": {
+          "score": 5.3,
+          "severity": "medium",
+          "source_url": "https://example.com/advisories/TEST-VULN-003",
+          "method": "CVSSv31",
+          "vector": "CVSS:3.1/AV:N/AC:L/PR:H/UI:R/S:U/C:L/I:L/A:N",
+          "source_name": "test-source",
+          "id": "TEST-VULN-003",
+          "label": "TEST-VULN-003",
+          "class": "vulnerability"
+        }
+      },
+      {
+        "data": {
+          "score": 3.1,
+          "severity": "low",
+          "source_url": "https://example.com/advisories/TEST-VULN-004",
+          "method": "CVSSv31",
+          "vector": "CVSS:3.1/AV:L/AC:H/PR:L/UI:N/S:U/C:L/I:N/A:N",
+          "source_name": "test-source",
+          "id": "TEST-VULN-004",
+          "label": "TEST-VULN-004",
           "class": "vulnerability"
         }
       }
@@ -288,6 +320,30 @@
           "id": "TEST-VULN-002-affects-component-C",
           "source": "TEST-VULN-002",
           "target": "component-C",
+          "class": "vulnerability"
+        }
+      },
+      {
+        "data": {
+          "id": "TEST-VULN-003-affects-component-A",
+          "source": "TEST-VULN-003",
+          "target": "component-A",
+          "class": "vulnerability"
+        }
+      },
+      {
+        "data": {
+          "id": "TEST-VULN-003-affects-component-F",
+          "source": "TEST-VULN-003",
+          "target": "component-F",
+          "class": "vulnerability"
+        }
+      },
+      {
+        "data": {
+          "id": "TEST-VULN-004-affects-component-H",
+          "source": "TEST-VULN-004",
+          "target": "component-H",
           "class": "vulnerability"
         }
       },

@@ -102,7 +102,8 @@ try
         if (bom.Metadata?.Component?.Name != null)
         {
             Console.WriteLine();
-            Console.WriteLine($"SBOM Component: {bom.Metadata.Component.Name}");            
+            var description = bom.Metadata?.Component?.Description != null ? $" - {bom.Metadata.Component.Description}" : "";
+            Console.WriteLine($"SBOM Component: {bom.Metadata?.Component?.Name}{description}");
         }
 
         if (filteredBom.Vulnerabilities?.Length == 0)

@@ -18,7 +18,8 @@
     "component": {
       "bom-ref": "root-component",
       "type": "application",
-      "name": "test-project"
+      "name": "test-project",
+      "description": "A test project to demonstrate a full dependency tree with vulnerabilities"
     }
   },
   "components": [
@@ -271,6 +272,71 @@
       "affects": [
         {
           "ref": "component-C"
+        }
+      ]
+    },
+    {
+      "bom-ref": "urn:uuid:7c6d5e4f-3a2b-1c0d-1e2f-3a4b5c6d7e8f",
+      "id": "TEST-VULN-003",
+      "source": {
+        "name": "test-source",
+        "url": "https://example.com/advisories/TEST-VULN-003"
+      },
+      "references": [
+        {
+          "id": "TEST-VULN-003",
+          "source": {
+            "name": "test-source",
+            "url": "https://example.com/advisories/TEST-VULN-003"
+          }
+        }
+      ],
+      "ratings": [
+        {
+          "score": 5.3,
+          "severity": "medium",
+          "method": "CVSSv31",
+          "vector": "CVSS:3.1/AV:N/AC:L/PR:H/UI:R/S:U/C:L/I:L/A:N"
+        }
+      ],
+      "description": "Medium severity vulnerability affecting component-A and component-F",
+      "affects": [
+        {
+          "ref": "component-A"
+        },
+        {
+          "ref": "component-F"
+        }
+      ]
+    },
+    {
+      "bom-ref": "urn:uuid:6d5e4f3a-2b1c-0d1e-2f3a-4b5c6d7e8f9a",
+      "id": "TEST-VULN-004",
+      "source": {
+        "name": "test-source",
+        "url": "https://example.com/advisories/TEST-VULN-004"
+      },
+      "references": [
+        {
+          "id": "TEST-VULN-004",
+          "source": {
+            "name": "test-source",
+            "url": "https://example.com/advisories/TEST-VULN-004"
+          }
+        }
+      ],
+      "ratings": [
+        {
+          "score": 3.1,
+          "severity": "low",
+          "method": "CVSSv31",
+          "vector": "CVSS:3.1/AV:L/AC:H/PR:L/UI:N/S:U/C:L/I:N/A:N"
+        }
+      ],
+      "description": "Low severity vulnerability affecting component-H",
+      "affects": [
+        {
+          "ref": "component-H"
         }
       ]
     }

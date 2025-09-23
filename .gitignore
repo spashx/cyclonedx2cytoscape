@@ -18,6 +18,7 @@ x86/
 *.user
 *.userosscache
 *.sln.docstates
+*.gitconfig
 
 ## VS Code
 .vscode/*
@@ -91,6 +92,7 @@ UpgradeLog*.XML
 secrets.json
 appsettings.*.local.json
 *.pfx
+.gitconfig
 
 ## Local caches
 .cache/
