@@ -1,6 +1,7 @@
 using CdxViz.Models.Cytoscape;
-using CdxViz.Models;
 using CdxViz.Options;
+using cdxviz.Models.Cytoscape;
+using cdxviz.Models.Bom;
 
 namespace CdxViz.Services;
 

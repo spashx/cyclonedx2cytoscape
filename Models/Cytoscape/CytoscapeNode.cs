@@ -5,9 +5,9 @@ namespace CdxViz.Models.Cytoscape;
 public class CytoscapeNode
 {
     [JsonProperty("data")]
-    public CytoscapeNodeData Data { get; set; }
+    public AbstractCytoscapeNodeData Data { get; set; }
 
-    public CytoscapeNode(CytoscapeNodeData data)
+    public CytoscapeNode(AbstractCytoscapeNodeData data)
     {
         Data = data;
     }

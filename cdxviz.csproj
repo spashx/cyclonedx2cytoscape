@@ -8,13 +8,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CommandLineParser" Version="2.9.1" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <Compile Remove="example\3DForce\**" />
+    <Compile Remove="Models\3DForce\**" />
+    <EmbeddedResource Remove="example\3DForce\**" />
+    <EmbeddedResource Remove="Models\3DForce\**" />
+    <None Remove="example\3DForce\**" />
+    <None Remove="Models\3DForce\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="example\3DForce\" />
-    <Folder Include="Models\3DForce\" />
+    <PackageReference Include="CommandLineParser" Version="2.9.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
 </Project>

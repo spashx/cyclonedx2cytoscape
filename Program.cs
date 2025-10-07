@@ -4,6 +4,7 @@ using CdxViz.Services;
 using CdxViz.Options;
 using Newtonsoft.Json;
 using CommandLine;
+using cdxviz.Models.Bom;
 
 namespace CdxViz
 {
@@ -56,7 +57,7 @@ namespace CdxViz
 
                 // Convert to Cytoscape.js format with specified options
                 var converter = new CdxToCytoscapeConverter();
-                
+
                 // Filter the BOM according to the requested mode
                 var filteredBom = FilterBomByMode(bom, options.OnlyVex, options.OnlyVdr);
 

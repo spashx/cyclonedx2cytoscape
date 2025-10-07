@@ -1,9 +1,9 @@
 using CdxViz.Models.Cytoscape;
 using Newtonsoft.Json;
 
-namespace CdxViz.Models;
+namespace cdxviz.Models.Cytoscape;
 
-public class ComponentNodeData : CytoscapeNodeData
+public class ComponentNodeData : AbstractCytoscapeNodeData
 {
     public ComponentNodeData()
     {
@@ -15,13 +15,13 @@ public class ComponentNodeData : CytoscapeNodeData
 
     [JsonProperty("version")]
     public string Version { get; set; } = "";
-    
+
     [JsonProperty("group")]
     public string Group { get; set; } = "";
-    
+
     [JsonProperty("severity")]
     public string Severity { get; set; } = "none";
-    
+
     [JsonProperty("topParent")]
     public bool IsTopParent { get; set; } = false;
 }

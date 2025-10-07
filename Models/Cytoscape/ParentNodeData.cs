@@ -1,8 +1,8 @@
 using CdxViz.Models.Cytoscape;
 
-namespace CdxViz.Models;
+namespace cdxviz.Models.Cytoscape;
 
-public class ParentNodeData : CytoscapeNodeData
+public class ParentNodeData : AbstractCytoscapeNodeData
 {
     public ParentNodeData(string id, string label)
     {

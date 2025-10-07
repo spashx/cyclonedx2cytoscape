@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 
 namespace CdxViz.Models.Cytoscape;
 
-public abstract class CytoscapeNodeData
+public abstract class AbstractCytoscapeNodeData
 {
     [JsonProperty("id")]
     public string Id { get; set; } = "";
