@@ -1,6 +1,7 @@
+using CdxViz.Models.Cytoscape;
 using Newtonsoft.Json;
 
-namespace Cdx2Cyto.Models;
+namespace CdxViz.Models;
 
 public class LicenseNodeData : CytoscapeNodeData
 {

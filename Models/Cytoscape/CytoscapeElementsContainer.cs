@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace Cdx2Cyto.Models;
+namespace CdxViz.Models.Cytoscape;
 
 public class CytoscapeElements
 {

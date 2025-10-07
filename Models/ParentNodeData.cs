@@ -1,4 +1,6 @@
-namespace Cdx2Cyto.Models;
+using CdxViz.Models.Cytoscape;
+
+namespace CdxViz.Models;
 
 public class ParentNodeData : CytoscapeNodeData
 {

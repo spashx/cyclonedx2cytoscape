@@ -110,11 +110,6 @@ npm-debug.log*
 yarn-error.log*
 
 
-## Cytoscape exported sessions / styles (optional)
-*.cyjs
-*.cys
-*.cytoscape.backup
-
 ## Archive dumps
 *.zip
 *.7z

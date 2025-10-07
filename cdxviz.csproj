@@ -8,8 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CycloneDX.Core" Version="9.0.2" />
+    <PackageReference Include="CommandLineParser" Version="2.9.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="example\3DForce\" />
+    <Folder Include="Models\3DForce\" />
   </ItemGroup>
 
 </Project>

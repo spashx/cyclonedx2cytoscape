@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace Cdx2Cyto.Services;
+namespace CdxViz.Services;
 
 public class SimpleBom
 {
