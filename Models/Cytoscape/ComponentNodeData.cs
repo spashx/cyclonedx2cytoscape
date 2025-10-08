@@ -1,5 +1,5 @@
 using CdxViz.Models.Cytoscape;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace cdxviz.Models.Cytoscape;
 
@@ -10,18 +10,18 @@ public class ComponentNodeData : AbstractCytoscapeNodeData
         Class = "component";
     }
 
-    [JsonProperty("type")]
+    [JsonPropertyName("type")]
     public string Type { get; set; } = "";
 
-    [JsonProperty("version")]
+    [JsonPropertyName("version")]
     public string Version { get; set; } = "";
 
-    [JsonProperty("group")]
+    [JsonPropertyName("group")]
     public string Group { get; set; } = "";
 
-    [JsonProperty("severity")]
+    [JsonPropertyName("severity")]
     public string Severity { get; set; } = "none";
 
-    [JsonProperty("topParent")]
+    [JsonPropertyName("topParent")]
     public bool IsTopParent { get; set; } = false;
 }

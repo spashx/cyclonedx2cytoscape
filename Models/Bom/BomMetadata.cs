@@ -1,9 +1,9 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace cdxviz.Models.Bom;
 
 public class BomMetadata
 {
-    [JsonProperty("component")]
+    [JsonPropertyName("component")]
     public SimpleComponent? Component { get; set; }
 }

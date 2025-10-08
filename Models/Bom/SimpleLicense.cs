@@ -1,9 +1,9 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace cdxviz.Models.Bom;
 
 public class SimpleLicense
 {
-    [JsonProperty("license")]
+    [JsonPropertyName("license")]
     public LicenseContent? License { get; set; }
 }

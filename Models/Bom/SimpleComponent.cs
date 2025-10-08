@@ -1,30 +1,30 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace cdxviz.Models.Bom;
 
 public class SimpleComponent
 {
-    [JsonProperty("bom-ref")]
+    [JsonPropertyName("bom-ref")]
     public string? BomRef { get; set; }
 
-    [JsonProperty("name")]
+    [JsonPropertyName("name")]
     public string? Name { get; set; }
 
-    [JsonProperty("version")]
+    [JsonPropertyName("version")]
     public string? Version { get; set; }
 
-    [JsonProperty("type")]
+    [JsonPropertyName("type")]
     public string? Type { get; set; }
 
-    [JsonProperty("group")]
+    [JsonPropertyName("group")]
     public string? Group { get; set; }
 
-    [JsonProperty("description")]
+    [JsonPropertyName("description")]
     public string? Description { get; set; }
 
-    [JsonProperty("purl")]
+    [JsonPropertyName("purl")]
     public string? Purl { get; set; }
     
-    [JsonProperty("licenses")]
+    [JsonPropertyName("licenses")]
     public SimpleLicense[]? Licenses { get; set; }
 }

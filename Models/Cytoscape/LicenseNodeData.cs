@@ -1,5 +1,5 @@
 using CdxViz.Models.Cytoscape;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace cdxviz.Models.Cytoscape;
 
@@ -10,6 +10,6 @@ public class LicenseNodeData : AbstractCytoscapeNodeData
         Class = "license";
     }
 
-    [JsonProperty("url")]
+    [JsonPropertyName("url")]
     public string Url { get; set; } = "";
 }

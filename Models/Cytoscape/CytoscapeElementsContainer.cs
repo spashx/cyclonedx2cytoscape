@@ -1,4 +1,4 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace CdxViz.Models.Cytoscape;
 
@@ -7,10 +7,10 @@ public class CytoscapeElements
     private readonly List<CytoscapeNode> nodes = new();
     private readonly List<CytoscapeEdge> edges = new();
 
-    [JsonProperty("nodes", Order = 1)]
+    [JsonPropertyName("nodes")]
     public List<CytoscapeNode> Nodes => nodes;
 
-    [JsonProperty("edges", Order = 2)]
+    [JsonPropertyName("edges")]
     public List<CytoscapeEdge> Edges => edges;
 
     public void AddNode(CytoscapeNode node)

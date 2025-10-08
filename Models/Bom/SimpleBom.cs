@@ -1,18 +1,18 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace cdxviz.Models.Bom;
 
 public class SimpleBom
 {
-    [JsonProperty("metadata")]
+    [JsonPropertyName("metadata")]
     public BomMetadata? Metadata { get; set; }
 
-    [JsonProperty("components")]
+    [JsonPropertyName("components")]
     public SimpleComponent[]? Components { get; set; }
 
-    [JsonProperty("dependencies")]
+    [JsonPropertyName("dependencies")]
     public SimpleDependency[]? Dependencies { get; set; }
 
-    [JsonProperty("vulnerabilities")]
+    [JsonPropertyName("vulnerabilities")]
     public SimpleVulnerability[]? Vulnerabilities { get; set; }
 }

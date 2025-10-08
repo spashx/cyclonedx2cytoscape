@@ -1,10 +1,10 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace CdxViz.Models.Cytoscape;
 
 public class CytoscapeNode
 {
-    [JsonProperty("data")]
+    [JsonPropertyName("data")]
     public AbstractCytoscapeNodeData Data { get; set; }
 
     public CytoscapeNode(AbstractCytoscapeNodeData data)

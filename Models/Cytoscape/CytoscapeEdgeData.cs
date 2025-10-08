@@ -1,18 +1,18 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace CdxViz.Models.Cytoscape;
 
 public class CytoscapeEdgeData
 {
-    [JsonProperty("id")]
+    [JsonPropertyName("id")]
     public string Id { get; set; } = "";
 
-    [JsonProperty("source")]
+    [JsonPropertyName("source")]
     public string Source { get; set; } = "";
 
-    [JsonProperty("target")]
+    [JsonPropertyName("target")]
     public string Target { get; set; } = "";
     
-    [JsonProperty("class")]
+    [JsonPropertyName("class")]
     public string Class { get; set; } = "";
 }

@@ -1,8 +1,8 @@
 ﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 using CdxViz.Models;
 using CdxViz.Services;
 using CdxViz.Options;
-using Newtonsoft.Json;
 using CommandLine;
 using cdxviz.Models.Bom;
 
@@ -18,22 +18,22 @@ namespace CdxViz
         /// </summary>
         /// <param name="args">Command line arguments</param>
         /// <returns>Exit code: 0 for success, 1 for error</returns>
-        public static int Main(string[] args)
+        public static async Task<int> Main(string[] args)
         {
             // Parse command line arguments using CommandLineParser
             var result = Parser.Default.ParseArguments<CommandLineOptions>(args);
 
-            return result.MapResult(
-                (CommandLineOptions opts) =>
+            return await result.MapResult(
+                async (CommandLineOptions opts) =>
                 {
                     // Validate the options before running the application
                     if (!opts.Validate())
                     {
                         return 1;
                     }
-                    return RunApplication(opts);
+                    return await RunApplicationAsync(opts);
                 },
-                errors => 1);
+                errors => Task.FromResult(1));
         }
 
         /// <summary>
@@ -41,17 +41,25 @@ namespace CdxViz
         /// </summary>
         /// <param name="options">Parsed command line options</param>
         /// <returns>Exit code: 0 for success, 1 for error</returns>
-        private static int RunApplication(CommandLineOptions options)
+        private static async Task<int> RunApplicationAsync(CommandLineOptions options)
         {
             try
             {
-                // Read the CycloneDX SBOM file
-                var cdxJson = File.ReadAllText(options.InputFile);
-                var bom = JsonConvert.DeserializeObject<SimpleBom>(cdxJson);
+                var jsonOptions = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true,
+                    WriteIndented = true,
+                    DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+                };
+                jsonOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
+
+                // Read the CycloneDX SBOM file using streaming async
+                await using var fs = File.OpenRead(options.InputFile);
+                var bom = await System.Text.Json.JsonSerializer.DeserializeAsync<SimpleBom>(fs, jsonOptions);
 
                 if (bom == null)
                 {
-                    Console.WriteLine("Error: Could not parse input file as CycloneDX SBOM");
+                    Console.Error.WriteLine("Error: Could not parse input file as CycloneDX SBOM");
                     return 1;
                 }
 
@@ -74,7 +82,7 @@ namespace CdxViz
                         Console.WriteLine($"SBOM Component: {bom.Metadata?.Component?.Name}{description}");
                     }
 
-                    if (filteredBom.Vulnerabilities?.Length == 0)
+                    if (filteredBom.Vulnerabilities == null || filteredBom.Vulnerabilities.Length == 0)
                     {
                         Console.WriteLine("No vulnerabilities found in the SBOM.");
                     }
@@ -100,16 +108,16 @@ namespace CdxViz
                     }
                 }
 
-                // Write the output
-                var cytoscapeJson = JsonConvert.SerializeObject(cytoscapeElements, Formatting.Indented);
-                File.WriteAllText(options.OutputFile, cytoscapeJson);
+                // Write the output using streaming async
+                await using var ofs = File.Create(options.OutputFile);
+                await System.Text.Json.JsonSerializer.SerializeAsync(ofs, cytoscapeElements, jsonOptions);
 
                 Console.WriteLine($"Successfully generated cystoscape file: {options.OutputFile}");
                 return 0;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.Error.WriteLine($"Error: {ex.Message}");
                 return 1;
             }
         }
@@ -174,7 +182,7 @@ namespace CdxViz
         /// <param name="bom">The BOM containing vulnerabilities to summarize</param>
         private static void DisplayVulnerabilitySummary(SimpleBom bom)
         {
-            if (bom.Vulnerabilities?.Length == 0)
+            if (bom.Vulnerabilities == null || bom.Vulnerabilities.Length == 0)
             {
                 return;
             }
@@ -253,7 +261,7 @@ namespace CdxViz
         /// <param name="showComponents">Whether to include affected components in the table</param>
         private static void DisplayVulnerabilitiesTable(SimpleBom bom, bool showComponents)
         {
-            if (bom.Vulnerabilities?.Length == 0)
+            if (bom.Vulnerabilities == null || bom.Vulnerabilities.Length == 0)
             {
                 Console.WriteLine("No vulnerabilities found.");
                 return;

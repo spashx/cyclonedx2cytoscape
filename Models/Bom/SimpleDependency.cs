@@ -1,15 +1,15 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace cdxviz.Models.Bom;
 
 public class SimpleDependency
 {
-    [JsonProperty("ref")]
+    [JsonPropertyName("ref")]
     public string? Ref { get; set; }
 
-    [JsonProperty("dependsOn")]
+    [JsonPropertyName("dependsOn")]
     public string[]? DependsOn { get; set; }
 
-    [JsonProperty("dependencies")]
+    [JsonPropertyName("dependencies")]
     public SimpleDependency[]? Dependencies { get; set; }
 }
