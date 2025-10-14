@@ -3,8 +3,8 @@ using System.Text.Json.Serialization;
 
 namespace CdxViz.Models.Cytoscape;
 
-public class CytoscapeNode : INode
+public class CytoscapeLink : ILink
 {
     [JsonPropertyName("data")]
-    public BaseNodeData Data { get; set; }
+    public BaseLinkData Data { get; set; } = new();
 }

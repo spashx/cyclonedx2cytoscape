@@ -1,9 +1,8 @@
-using CdxViz.Models.Cytoscape;
 using System.Text.Json.Serialization;
 
-namespace cdxviz.Models.Cytoscape;
+namespace CdxViz.Models.Common;
 
-public class LicenseNodeData : AbstractCytoscapeNodeData
+public class LicenseNodeData : BaseNodeData
 {
     public LicenseNodeData()
     {

@@ -1,8 +1,8 @@
 using System.Text.Json.Serialization;
 
-namespace CdxViz.Models.Cytoscape;
+namespace CdxViz.Models.Common;
 
-public abstract class AbstractCytoscapeNodeData
+public abstract class BaseNodeData
 {
     [JsonPropertyName("id")]
     public string Id { get; set; } = "";

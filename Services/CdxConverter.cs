@@ -1,7 +1,6 @@
-using CdxViz.Models.Cytoscape;
 using CdxViz.Options;
-using cdxviz.Models.Cytoscape;
-using cdxviz.Models.Bom;
+using CdxViz.Models.Bom;
+using CdxViz.Models.Common;
 
 namespace CdxViz.Services;
 
@@ -11,18 +10,24 @@ namespace CdxViz.Services;
 /// The converter can be configured to include or exclude vulnerabilities and licenses
 /// based on the options provided.
 /// </summary>
-public class CdxToCytoscapeConverter
+public class CdxConverter
 {
-    private CommandLineOptions _options = new CommandLineOptions();
+    private readonly IGraphFactory _factory;
+    private readonly CommandLineOptions _options;
 
-    /// <summary>
-    /// Converts a CycloneDX SBOM to a Cytoscape graph format with default options
-    /// </summary>
-    /// <param name="bom">The SBOM to convert</param>
-    /// <returns>A graph representation suitable for Cytoscape visualization</returns>
-    public CytoscapeGraph Convert(SimpleBom bom)
+    public CdxConverter(IGraphFactory factory, CommandLineOptions options)
     {
-        return Convert(bom, new CommandLineOptions());
+        if (factory == null)
+        {
+            throw new ArgumentNullException(nameof(factory));
+        }
+        if (options == null)
+        {
+            throw new ArgumentNullException(nameof(options));
+        }
+
+        _factory = factory;
+        _options = options;
     }
 
     /// <summary>
@@ -31,19 +36,23 @@ public class CdxToCytoscapeConverter
     /// <param name="bom">The SBOM to convert</param>
     /// <param name="options">Options to configure the conversion</param>
     /// <returns>A graph representation suitable for Cytoscape visualization</returns>
-    public CytoscapeGraph Convert(SimpleBom bom, CommandLineOptions options)
+    public IGraph Convert(SimpleBom bom)
     {
-        _options = options;
-        var graph = new CytoscapeGraph();
+        if (bom == null)
+        {
+            throw new ArgumentNullException(nameof(bom));
+        }
+
+        var graph = _factory.CreateGraph();
 
         // If OnlyVex mode is enabled, only process vulnerabilities
-        if (options.OnlyVex)
+        if (_options.OnlyVex)
         {
             return ConvertOnlyVex(bom);
         }
 
         // If OnlyVdr mode is enabled, only process vulnerabilities and impacted components
-        if (options.OnlyVdr)
+        if (_options.OnlyVdr)
         {
             return ConvertOnlyVdr(bom);
         }
@@ -67,7 +76,7 @@ public class CdxToCytoscapeConverter
 
         // Process licenses from all components if enabled
         // Only generates license nodes and edges if IncludeLicenses is true
-        if (options.IncludeLicenses && bom.Components != null)
+        if (_options.IncludeLicenses && bom.Components != null)
         {
             var uniqueLicenses = new HashSet<string>();
 
@@ -114,7 +123,7 @@ public class CdxToCytoscapeConverter
 
         // Add vulnerabilities as nodes if enabled
         // Only generates vulnerability nodes and edges if IncludeVulnerabilities is true
-        if (options.IncludeVulnerabilities && bom.Vulnerabilities != null)
+        if (_options.IncludeVulnerabilities && bom.Vulnerabilities != null)
         {
             foreach (var vulnerability in bom.Vulnerabilities)
             {
@@ -143,7 +152,7 @@ public class CdxToCytoscapeConverter
         // Propagate vulnerability severity up the dependency tree if vulnerabilities are included
         // This ensures that if a component has a vulnerable dependency, the component itself
         // is marked with the highest severity of any of its dependencies
-        if (options.IncludeVulnerabilities)
+        if (_options.IncludeVulnerabilities)
         {
             PropagateSeverityToParents(graph);
         }
@@ -156,7 +165,7 @@ public class CdxToCytoscapeConverter
     /// </summary>
     /// <param name="elements">The graph elements collection</param>
     /// <param name="licenseId">The license ID to add</param>
-    private void AddLicenseNode(CytoscapeElements elements, string licenseId)
+    private void AddLicenseNode(IElements elements, string licenseId)
     {
         // Create a license node with a consistent ID format
         // The "license-" prefix ensures uniqueness and identification in the graph
@@ -166,7 +175,9 @@ public class CdxToCytoscapeConverter
             Label = licenseId
         };
 
-        elements.AddNode(new CytoscapeNode(nodeData));
+        INode node = _factory.CreateNode();
+        node.Data = nodeData;
+        elements.AddNode(node);
     }
 
     /// <summary>
@@ -175,23 +186,24 @@ public class CdxToCytoscapeConverter
     /// <param name="elements">The graph elements collection</param>
     /// <param name="componentBomRef">The component BOM reference</param>
     /// <param name="licenseId">The license ID</param>
-    private void AddLicenseEdge(CytoscapeElements elements, string componentBomRef, string licenseId)
+    private void AddLicenseEdge(IElements elements, string componentBomRef, string licenseId)
     {
         // Create an edge from the license to the component
         // This represents that the license applies to the component
         // Direction is from license to component, indicating the license "applies to" the component
-        var edge = new CytoscapeEdge
+
+        var data = new BaseLinkData
         {
-            Data = new CytoscapeEdgeData
-            {
-                Id = $"license-{licenseId}-applies-to-{componentBomRef}",
-                Source = $"license-{licenseId}",
-                Target = componentBomRef,
-                Class = "license"
-            }
+            Id = $"license-{licenseId}-applies-to-{componentBomRef}",
+            Source = $"license-{licenseId}",
+            Target = componentBomRef,
+            Class = "license"
         };
 
-        elements.AddEdge(edge);
+        var link = _factory.CreateLink();
+        link.Data = data;
+
+        elements.AddLink(link);
     }
 
     /// <summary>
@@ -199,7 +211,7 @@ public class CdxToCytoscapeConverter
     /// </summary>
     /// <param name="elements">The graph elements collection</param>
     /// <param name="component">The component to add</param>
-    private void AddComponentNode(CytoscapeElements elements, SimpleComponent component)
+    private void AddComponentNode(IElements elements, SimpleComponent component)
     {
         // Skip components without a valid BOM reference as they can't be properly identified
         if (string.IsNullOrEmpty(component.BomRef))
@@ -210,13 +222,14 @@ public class CdxToCytoscapeConverter
         var nodeData = new ComponentNodeData
         {
             Id = component.BomRef,
-            Label = FormatNodeLabel(component),
+            Label = FormatNodeLabel(component, _options.ShowGroupsInNodesLabels),
             Type = component.Type ?? "",
             Version = component.Version ?? "",
             Group = component.Group ?? ""
         };
-
-        elements.AddNode(new CytoscapeNode(nodeData));
+        INode node = _factory.CreateNode();
+        node.Data = nodeData;
+        elements.AddNode(node);
     }
 
     /// <summary>
@@ -224,7 +237,7 @@ public class CdxToCytoscapeConverter
     /// </summary>
     /// <param name="elements">The graph elements collection</param>
     /// <param name="vulnerability">The vulnerability to add</param>
-    private void AddVulnerabilityNode(CytoscapeElements elements, SimpleVulnerability vulnerability)
+    private void AddVulnerabilityNode(IElements elements, SimpleVulnerability vulnerability)
     {
         // Skip vulnerabilities without a valid ID
         if (string.IsNullOrEmpty(vulnerability.Id))
@@ -247,7 +260,9 @@ public class CdxToCytoscapeConverter
             Vector = rating?.Vector ?? "",              // Scoring vector string
         };
 
-        elements.AddNode(new CytoscapeNode(nodeData));
+        var node = _factory.CreateNode();
+        node.Data = nodeData;
+        elements.AddNode(node);
     }
 
     /// <summary>
@@ -255,13 +270,13 @@ public class CdxToCytoscapeConverter
     /// </summary>
     /// <param name="component">The component to format</param>
     /// <returns>A formatted label string</returns>
-    private string FormatNodeLabel(SimpleComponent component)
+    private static string FormatNodeLabel(SimpleComponent component, bool showGroupsInNodesLabel)
     {
         var parts = new List<string>();
 
         // Build a hierarchical label including available metadata
         // This creates a more informative node label in the graph
-        if (_options.ShowGroupsInNodeLabels && !string.IsNullOrEmpty(component.Group))
+        if (showGroupsInNodesLabel && !string.IsNullOrEmpty(component.Group))
             parts.Add(component.Group);
 
         if (!string.IsNullOrEmpty(component.Name))
@@ -279,7 +294,7 @@ public class CdxToCytoscapeConverter
     /// </summary>
     /// <param name="elements">The graph elements collection</param>
     /// <param name="vulnerability">The vulnerability that affects components</param>
-    private void AddVulnerabilityEdges(CytoscapeElements elements, SimpleVulnerability vulnerability)
+    private void AddVulnerabilityEdges(IElements elements, SimpleVulnerability vulnerability)
     {
         // Skip if the vulnerability doesn't have a valid ID or doesn't affect any components
         if (string.IsNullOrEmpty(vulnerability.Id) || vulnerability.Affects == null)
@@ -294,18 +309,17 @@ public class CdxToCytoscapeConverter
 
             // Create an edge from the vulnerability to the component
             // Direction is from vulnerability to component, indicating the vulnerability "affects" the component
-            var edge = new CytoscapeEdge
-            {
-                Data = new CytoscapeEdgeData
-                {
-                    Id = $"{vulnerability.Id}-affects-{affect.Ref}",
-                    Source = vulnerability.Id,
-                    Target = affect.Ref,
-                    Class = "vulnerability"
-                }
-            };
 
-            elements.AddEdge(edge);
+            ILink link = _factory.CreateLink();
+            var data = new BaseLinkData
+            {
+                Id = $"{vulnerability.Id}-affects-{affect.Ref}",
+                Source = vulnerability.Id,
+                Target = affect.Ref,
+                Class = "vulnerability"
+            };
+            link.Data = data;
+            elements.AddLink(link);
         }
     }
 
@@ -314,7 +328,7 @@ public class CdxToCytoscapeConverter
     /// </summary>
     /// <param name="elements">The graph elements collection</param>
     /// <param name="dependency">The dependency relationship to process</param>
-    private void AddDependencyEdges(CytoscapeElements elements, SimpleDependency dependency)
+    private void AddDependencyEdges(IElements elements, SimpleDependency dependency)
     {
         // Skip if the source component reference is missing or there are no dependencies
         if (string.IsNullOrEmpty(dependency.Ref) || dependency.DependsOn == null)
@@ -326,18 +340,19 @@ public class CdxToCytoscapeConverter
             // Create an edge representing the dependency relationship
             // Direction is from source to target, indicating the source "depends on" the target
             // For example: A -> B means A depends on B
-            var edge = new CytoscapeEdge
+
+            var data = new BaseLinkData
             {
-                Data = new CytoscapeEdgeData
-                {
-                    Id = $"{dependency.Ref}->{target}",
-                    Source = dependency.Ref,
-                    Target = target,
-                    Class = "component"
-                }
+                Id = $"{dependency.Ref}->{target}",
+                Source = dependency.Ref,
+                Target = target,
+                Class = "component"
             };
 
-            elements.AddEdge(edge);
+            var link = _factory.CreateLink();
+            link.Data = data;
+
+            elements.AddLink(link);
         }
 
         // Recursively process nested dependencies if any
@@ -355,7 +370,7 @@ public class CdxToCytoscapeConverter
     /// Propagates vulnerability severity up the dependency tree to parent components
     /// </summary>
     /// <param name="graph">The graph with components, dependencies and vulnerabilities</param>
-    private void PropagateSeverityToParents(CytoscapeGraph graph)
+    private void PropagateSeverityToParents(IGraph graph)
     {
         var elements = graph.Elements;
 
@@ -370,7 +385,7 @@ public class CdxToCytoscapeConverter
 
         // Build the dependency relationships
         // In this step, we identify which components depend on which other components
-        foreach (var edge in elements.Edges)
+        foreach (var edge in elements.Links)
         {
             // Only consider dependency edges between components, not vulnerability-component edges
             if (componentNodes.ContainsKey(edge.Data.Source) && componentNodes.ContainsKey(edge.Data.Target))
@@ -390,7 +405,7 @@ public class CdxToCytoscapeConverter
 
         // Collect direct vulnerabilities
         // Identify which components are directly affected by vulnerabilities
-        foreach (var edge in elements.Edges)
+        foreach (var edge in elements.Links)
         {
             // Check if this is a vulnerability-component edge
             var vulnNode = elements.Nodes
@@ -448,7 +463,7 @@ public class CdxToCytoscapeConverter
     /// </summary>
     private void PropagateToAllParents(
         string componentId,
-        Dictionary<string, CytoscapeNode> componentNodes,
+        Dictionary<string, INode> componentNodes,
         Dictionary<string, HashSet<string>> parentsByChild,
         HashSet<string> processedForPropagation)
     {
@@ -541,7 +556,7 @@ public class CdxToCytoscapeConverter
     /// <param name="componentNodes">Dictionary of all component nodes</param>
     /// <param name="parentsByChild">Mapping of child components to their parent components</param>
     private void MarkTopParentComponents(
-        Dictionary<string, CytoscapeNode> componentNodes,
+        Dictionary<string, INode> componentNodes,
         Dictionary<string, HashSet<string>> parentsByChild)
     {
         // We need to identify components that other components depend on (targets)
@@ -586,7 +601,7 @@ public class CdxToCytoscapeConverter
     /// </summary>
     /// <param name="elements">The graph elements</param>
     /// <param name="componentNodes">Dictionary of component nodes by ID</param>
-    private void EnsureVulnerabilityEdgeClasses(CytoscapeElements elements, Dictionary<string, CytoscapeNode> componentNodes)
+    private void EnsureVulnerabilityEdgeClasses(IElements elements, Dictionary<string, INode> componentNodes)
     {
         // Get all vulnerability node IDs for efficient lookup
         var vulnerabilityNodeIds = elements.Nodes
@@ -596,7 +611,7 @@ public class CdxToCytoscapeConverter
 
         // Update edge classes for all edges involving vulnerability nodes
         // This ensures consistent styling for vulnerability-related edges in visualization
-        foreach (var edge in elements.Edges)
+        foreach (var edge in elements.Links)
         {
             // If either source or target is a vulnerability node, set class to "vulnerability"
             if (vulnerabilityNodeIds.Contains(edge.Data.Source) || vulnerabilityNodeIds.Contains(edge.Data.Target))
@@ -611,9 +626,9 @@ public class CdxToCytoscapeConverter
     /// </summary>
     /// <param name="bom">The SBOM to convert</param>
     /// <returns>A graph containing only vulnerability nodes</returns>
-    private CytoscapeGraph ConvertOnlyVex(SimpleBom bom)
+    private IGraph ConvertOnlyVex(SimpleBom bom)
     {
-        var graph = new CytoscapeGraph();
+        var graph = _factory.CreateGraph();
 
         // Add vulnerabilities as nodes only
         if (bom.Vulnerabilities != null)
@@ -632,9 +647,9 @@ public class CdxToCytoscapeConverter
     /// </summary>
     /// <param name="bom">The SBOM to convert</param>
     /// <returns>A graph containing only vulnerability nodes and affected component nodes with their relationships</returns>
-    private CytoscapeGraph ConvertOnlyVdr(SimpleBom bom)
+    private IGraph ConvertOnlyVdr(SimpleBom bom)
     {
-        var graph = new CytoscapeGraph();
+        var graph = _factory.CreateGraph();
 
         if (bom.Vulnerabilities == null || !bom.Vulnerabilities.Any())
         {

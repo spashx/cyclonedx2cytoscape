@@ -1,9 +1,8 @@
-using CdxViz.Models.Cytoscape;
 using System.Text.Json.Serialization;
 
-namespace cdxviz.Models.Cytoscape;
+namespace CdxViz.Models.Common;
 
-public class ComponentNodeData : AbstractCytoscapeNodeData
+public class ComponentNodeData : BaseNodeData
 {
     public ComponentNodeData()
     {
@@ -19,6 +18,9 @@ public class ComponentNodeData : AbstractCytoscapeNodeData
     [JsonPropertyName("group")]
     public string Group { get; set; } = "";
 
+    /// <summary>
+    /// Severity of the most severe vulnerability associated with this component, if any
+    /// </summary>
     [JsonPropertyName("severity")]
     public string Severity { get; set; } = "none";
 

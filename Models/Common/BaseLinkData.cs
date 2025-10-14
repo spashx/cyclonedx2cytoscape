@@ -1,8 +1,8 @@
 using System.Text.Json.Serialization;
 
-namespace CdxViz.Models.Cytoscape;
+namespace CdxViz.Models.Common;
 
-public class CytoscapeEdgeData
+public class BaseLinkData
 {
     [JsonPropertyName("id")]
     public string Id { get; set; } = "";
@@ -12,7 +12,7 @@ public class CytoscapeEdgeData
 
     [JsonPropertyName("target")]
     public string Target { get; set; } = "";
-    
+
     [JsonPropertyName("class")]
     public string Class { get; set; } = "";
 }

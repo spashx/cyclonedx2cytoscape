@@ -1,10 +1,9 @@
 using CdxViz.Models.Common;
 using System.Text.Json.Serialization;
 
-namespace CdxViz.Models.Cytoscape;
+namespace CdxViz.Models.ThreeDForceGraph;
 
-public class CytoscapeNode : INode
+public class ThreeDForceNode : INode
 {
-    [JsonPropertyName("data")]
     public BaseNodeData Data { get; set; }
 }

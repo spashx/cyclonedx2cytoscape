@@ -1,28 +1,30 @@
 ```mermaid
 classDiagram
     %% Abstract base classes
-    class CytoscapeNodeData {
+    class BaseNodeData {
         <<abstract>>
         +string Id
         +string Label
         +string Class
     }
 
-    %% Cytoscape Models
-    class CytoscapeNode {
-        +CytoscapeNodeData Data
-        +CytoscapeNode(CytoscapeNodeData data)
-    }
-
-    class CytoscapeEdgeData {
+    class BaseLinkData {
         +string Id
         +string Source
         +string Target
         +string Class
+        +BaseLinkData(string id, string source, string target, string edgeClass)
+    }
+
+    %% Cytoscape Models
+    class CytoscapeNode {
+        +BaseNodeData Data
+        +CytoscapeNode(BaseNodeData data)
     }
 
     class CytoscapeEdge {
-        +CytoscapeEdgeData Data
+        +BaseLinkData Data
+        +CytoscapeEdge(BaseLinkData data)
     }
 
     class CytoscapeElements {
@@ -38,7 +40,7 @@ classDiagram
         +CytoscapeElements Elements
     }
 
-    %% Node Data Types (inherit from CytoscapeNodeData)
+    %% Node Data Types (inherit from BaseNodeData)
     class ComponentNodeData {
         +string Type
         +string Version
@@ -130,37 +132,35 @@ classDiagram
         +string? Ref
     }
 
-    %% Relationships
-    CytoscapeNodeData <|-- ComponentNodeData
-    CytoscapeNodeData <|-- VulnerabilityNodeData
-    CytoscapeNodeData <|-- LicenseNodeData
-    CytoscapeNodeData <|-- ParentNodeData
+    %% Relationships - Cytoscape hierarchy
+    BaseNodeData <|-- ComponentNodeData
+    BaseNodeData <|-- VulnerabilityNodeData
+    BaseNodeData <|-- LicenseNodeData
+    BaseNodeData <|-- ParentNodeData
 
-    CytoscapeNode *-- CytoscapeNodeData
-    CytoscapeEdge *-- CytoscapeEdgeData
-    CytoscapeElements *-- CytoscapeNode
-    CytoscapeElements *-- CytoscapeEdge
-    CytoscapeGraph *-- CytoscapeElements
+    CytoscapeNode *-- BaseNodeData : contains
+    CytoscapeEdge *-- BaseLinkData : contains
+    CytoscapeElements o-- CytoscapeNode : aggregates
+    CytoscapeElements o-- CytoscapeEdge : aggregates
+    CytoscapeGraph *-- CytoscapeElements : contains
 
-    SimpleBom *-- BomMetadata
-    SimpleBom *-- SimpleComponent
-    SimpleBom *-- SimpleDependency
-    SimpleBom *-- SimpleVulnerability
+    %% Relationships - SBOM hierarchy
+    SimpleBom o-- BomMetadata : aggregates
+    SimpleBom o-- SimpleComponent : aggregates
+    SimpleBom o-- SimpleDependency : aggregates
+    SimpleBom o-- SimpleVulnerability : aggregates
 
-    BomMetadata *-- SimpleComponent
-    SimpleComponent *-- SimpleLicense
-    SimpleLicense *-- LicenseContent
-    SimpleDependency *-- SimpleDependency : recursive
+    BomMetadata *-- SimpleComponent : contains
+    SimpleComponent o-- SimpleLicense : aggregates
+    SimpleLicense *-- LicenseContent : contains
+    SimpleDependency o-- SimpleDependency : recursive
 
-    SimpleVulnerability *-- VulnerabilitySource
-    SimpleVulnerability *-- VulnerabilityRating
-    SimpleVulnerability *-- VulnerabilityAffects
+    SimpleVulnerability *-- VulnerabilitySource : contains
+    SimpleVulnerability o-- VulnerabilityRating : aggregates
+    SimpleVulnerability o-- VulnerabilityAffects : aggregates
 
     %% Styling
     classDef abstract fill:#e1f5fe,stroke:#01579b,stroke-width:2px
     classDef cytoscape fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
     classDef sbom fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
     classDef nodeData fill:#fff3e0,stroke:#e65100,stroke-width:2px
-
-
-```

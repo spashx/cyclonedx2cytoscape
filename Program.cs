@@ -4,7 +4,10 @@ using CdxViz.Models;
 using CdxViz.Services;
 using CdxViz.Options;
 using CommandLine;
-using cdxviz.Models.Bom;
+using CdxViz.Models.Bom;
+using CdxViz.Models.Common;
+using CdxViz.Models.Cytoscape;
+using CdxViz.Models.ThreeDForceGraph;
 
 namespace CdxViz
 {
@@ -37,6 +40,23 @@ namespace CdxViz
         }
 
         /// <summary>
+        /// Creates the appropriate graph factory based on the output format
+        /// </summary>
+        /// <param name="format">The output format (cytoscape or 3dforce)</param>
+        /// <returns>An instance of IGraphFactory for the specified format</returns>
+        private static IGraphFactory CreateGraphFactory(string format)
+        {
+            var normalizedFormat = format.ToLowerInvariant();
+
+            return normalizedFormat switch
+            {
+                "3dforce" => new ThreedDForceGraphFactory(),
+                "cytoscape" => new CystoscapeGraphFactory(),
+                _ => new CystoscapeGraphFactory() // Default to cytoscape
+            };
+        }
+
+        /// <summary>
         /// Runs the main application logic with the provided command line options
         /// </summary>
         /// <param name="options">Parsed command line options</param>
@@ -63,13 +83,16 @@ namespace CdxViz
                     return 1;
                 }
 
-                // Convert to Cytoscape.js format with specified options
-                var converter = new CdxToCytoscapeConverter();
+                // Create the appropriate graph factory based on the output format
+                var factory = CreateGraphFactory(options.OutputFormat);
+
+                // Convert to the specified format with the factory
+                var converter = new CdxConverter(factory, options);
 
                 // Filter the BOM according to the requested mode
                 var filteredBom = FilterBomByMode(bom, options.OnlyVex, options.OnlyVdr);
 
-                var cytoscapeElements = converter.Convert(filteredBom, options);
+                var graph = converter.Convert(filteredBom);
 
                 // Handle VEX/VDR mode display
                 if (options.OnlyVex || options.OnlyVdr)
@@ -110,9 +133,10 @@ namespace CdxViz
 
                 // Write the output using streaming async
                 await using var ofs = File.Create(options.OutputFile);
-                await System.Text.Json.JsonSerializer.SerializeAsync(ofs, cytoscapeElements, jsonOptions);
+                await System.Text.Json.JsonSerializer.SerializeAsync(ofs, graph, jsonOptions);
 
-                Console.WriteLine($"Successfully generated cystoscape file: {options.OutputFile}");
+                var formatName = options.OutputFormat.ToLowerInvariant() == "3dforce" ? "3D Force Graph" : "Cytoscape";
+                Console.WriteLine($"Successfully generated {formatName} file: {options.OutputFile}");
                 return 0;
             }
             catch (Exception ex)

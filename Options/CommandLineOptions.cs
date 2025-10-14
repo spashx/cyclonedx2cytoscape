@@ -18,26 +18,32 @@ public class CommandLineOptions
     /// <summary>
     /// Path to write the Cytoscape.js JSON output file
     /// </summary>
-    [Option("output", HelpText = "Path to Cytoscape.js JSON output file", Required = true)]
+    [Option("output", HelpText = "Path to output file", Required = true)]
     public string OutputFile { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Output format: cytoscape or 3dforce
+    /// </summary>
+    [Option("format", HelpText = "Output format: cytoscape or 3dforce (default: cytoscape)", Default = "cytoscape")]
+    public string OutputFormat { get; set; } = "cytoscape";
 
     /// <summary>
     /// Include vulnerability nodes and edges in the output
     /// </summary>
-    [Option("vulns", HelpText = "Include vulnerability nodes and edges into cytoscape output")]
+    [Option("with-vulns", HelpText = "Include vulnerability nodes and edges into cytoscape output")]
     public bool IncludeVulnerabilities { get; set; }
 
     /// <summary>
     /// Include license nodes and edges in the output
     /// </summary>
-    [Option("lic", HelpText = "Include license nodes and edges")]
+    [Option("with-lic", HelpText = "Include license nodes and edges")]
     public bool IncludeLicenses { get; set; }
 
     /// <summary>
     /// Include group names in node labels
     /// </summary>
-    [Option("show-groups-in-node-labels", HelpText = "Include group names in node labels (default: off)")]
-    public bool ShowGroupsInNodeLabels { get; set; }
+    [Option("show-groups-in-nodes-labels", HelpText = "Include group names in nodes labels (default: off)")]
+    public bool ShowGroupsInNodesLabels { get; set; }
 
     /// <summary>
     /// Output only vulnerability information (VEX mode)
@@ -57,6 +63,14 @@ public class CommandLineOptions
         if (OnlyVex && OnlyVdr)
         {
             Console.Error.WriteLine("Error: --only-vex and --only-vdr options are mutually exclusive");
+            return false;
+        }
+
+        // Validate output format
+        var normalizedFormat = OutputFormat.ToLowerInvariant();
+        if (normalizedFormat != "cytoscape" && normalizedFormat != "3dforce")
+        {
+            Console.Error.WriteLine("Error: --format must be either 'cytoscape' or '3dforce'");
             return false;
         }
 

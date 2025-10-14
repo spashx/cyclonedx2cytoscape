@@ -1,9 +1,10 @@
+using CdxViz.Models.Common;
 using System.Text.Json.Serialization;
 
 namespace CdxViz.Models.Cytoscape;
 
-public class CytoscapeGraph
+public class CytoscapeGraph : IGraph
 {
     [JsonPropertyName("elements")]
-    public CytoscapeElements Elements { get; set; } = new();
+    public IElements Elements { get; set; } = new CytoscapeElements();
 }
