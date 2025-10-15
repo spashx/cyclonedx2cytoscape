@@ -9,6 +9,9 @@ namespace CdxViz.Options;
 /// </summary>
 public class CommandLineOptions
 {
+    public const string FORMAT_CYTOSCAPE = "cytoscape";
+    public const string FORMAT_3DFORCE = "3dforce";
+
     /// <summary>
     /// Path to the CycloneDX SBOM JSON input file
     /// </summary>
@@ -24,20 +27,20 @@ public class CommandLineOptions
     /// <summary>
     /// Output format: cytoscape or 3dforce
     /// </summary>
-    [Option("format", HelpText = "Output format: cytoscape or 3dforce (default: cytoscape)", Default = "cytoscape")]
-    public string OutputFormat { get; set; } = "cytoscape";
+    [Option("format", HelpText = "Output format: cytoscape or 3dforce ")]
+    public string OutputFormat { get; set; }
 
     /// <summary>
     /// Include vulnerability nodes and edges in the output
     /// </summary>
     [Option("with-vulns", HelpText = "Include vulnerability nodes and edges into cytoscape output")]
-    public bool IncludeVulnerabilities { get; set; }
+    public bool WithVulnerabilities { get; set; }
 
     /// <summary>
     /// Include license nodes and edges in the output
     /// </summary>
-    [Option("with-lic", HelpText = "Include license nodes and edges")]
-    public bool IncludeLicenses { get; set; }
+    [Option("with-lics", HelpText = "Include license nodes and edges")]
+    public bool WithLicences { get; set; }
 
     /// <summary>
     /// Include group names in node labels
@@ -68,16 +71,16 @@ public class CommandLineOptions
 
         // Validate output format
         var normalizedFormat = OutputFormat.ToLowerInvariant();
-        if (normalizedFormat != "cytoscape" && normalizedFormat != "3dforce")
+        if (normalizedFormat != FORMAT_CYTOSCAPE && normalizedFormat != FORMAT_3DFORCE)
         {
-            Console.Error.WriteLine("Error: --format must be either 'cytoscape' or '3dforce'");
+            Console.Error.WriteLine($"Error: --format must be either {FORMAT_CYTOSCAPE} or {FORMAT_3DFORCE}");
             return false;
         }
 
         // If VEX/VDR mode requested, ensure vulnerabilities are included
         if (OnlyVex || OnlyVdr)
         {
-            IncludeVulnerabilities = true;
+            WithVulnerabilities = true;
         }
 
         // Validate input file

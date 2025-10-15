@@ -76,7 +76,7 @@ public class CdxConverter
 
         // Process licenses from all components if enabled
         // Only generates license nodes and edges if IncludeLicenses is true
-        if (_options.IncludeLicenses && bom.Components != null)
+        if (_options.WithLicences && bom.Components != null)
         {
             var uniqueLicenses = new HashSet<string>();
 
@@ -123,7 +123,7 @@ public class CdxConverter
 
         // Add vulnerabilities as nodes if enabled
         // Only generates vulnerability nodes and edges if IncludeVulnerabilities is true
-        if (_options.IncludeVulnerabilities && bom.Vulnerabilities != null)
+        if (_options.WithVulnerabilities && bom.Vulnerabilities != null)
         {
             foreach (var vulnerability in bom.Vulnerabilities)
             {
@@ -152,7 +152,7 @@ public class CdxConverter
         // Propagate vulnerability severity up the dependency tree if vulnerabilities are included
         // This ensures that if a component has a vulnerable dependency, the component itself
         // is marked with the highest severity of any of its dependencies
-        if (_options.IncludeVulnerabilities)
+        if (_options.WithVulnerabilities)
         {
             PropagateSeverityToParents(graph);
         }

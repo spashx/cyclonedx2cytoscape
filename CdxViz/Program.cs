@@ -65,13 +65,19 @@ namespace CdxViz
         {
             try
             {
+                // IMPORTANT:
+                // - PropertyNamingPolicy = null and DictionaryKeyPolicy = null force serialization
+                //   to use the explicit names provided by [JsonPropertyName(...)] in the model classes.
+                // - PropertyNameCaseInsensitive = true helps deserialization to match keys with
+                //   different casing / characters (useful for external SBOMs).
                 var jsonOptions = new JsonSerializerOptions
                 {
-                    PropertyNameCaseInsensitive = true,
+                    PropertyNamingPolicy = null,
+                    DictionaryKeyPolicy = null,
                     WriteIndented = true,
                     DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
                 };
-                jsonOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
+                jsonOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.KebabCaseLower));
 
                 // Read the CycloneDX SBOM file using streaming async
                 await using var fs = File.OpenRead(options.InputFile);

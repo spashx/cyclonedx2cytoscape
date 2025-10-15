@@ -1,0 +1,6 @@
+# Test results
+TestResults/
+
+# Test outputs - kept for manual inspection, but can be regenerated
+# Uncomment the next line if you don't want to commit test outputs
+# TestsOutput/
